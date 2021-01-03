@@ -1,6 +1,6 @@
 package ehu.isad;
 
-import ehu.isad.controllers.ui.ProbaController;
+import ehu.isad.controllers.ui.NagKud;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,20 +14,22 @@ public class Main extends Application {
 
   private Parent root;
   private Stage stage;
+  private NagKud nagkud;
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    loadUI(primaryStage);
-    stageSetup();
+    stage = primaryStage;
+    loadUI();
+
+    stage.setTitle("Azterketa");
+    stage.setScene(new Scene(root,1208,400));
     stage.show();
   }
 
-  private void loadUI(Stage primaryStage) throws IOException {
-    stage = primaryStage;
+  private void loadUI() throws IOException {
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/proba.fxml"));
-    ProbaController mainController = ProbaController.getInstance();
-    loader.setController(mainController);
     root = loader.load();
+    nagkud = loader.getController();
   }
 
   private void stageSetup(){

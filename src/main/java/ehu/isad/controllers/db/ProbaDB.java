@@ -1,6 +1,6 @@
 package ehu.isad.controllers.db;
 
-import ehu.isad.model.ProbaModel;
+import ehu.isad.model.Pertsona;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,25 +18,43 @@ public class ProbaDB{
         return instance;
     }
 
-    public void addToDB(){
-        String query = "INSERT INTO xxxx(xx,xx,xx) VALUES ('xx','xx','xx')";
-        dbcontroller.execSQL(query);
-    }
 
-    public List<ProbaModel> getFromDB(){
-        String query = "SELECT xxxx FROM xxxx";
-        List<ProbaModel> list = new ArrayList<>();
-        ResultSet rs = dbcontroller.execSQL(query);
-        try {
-            while (rs.next()) {
-                String xx1 = rs.getString("xx");
-                String xx2 = rs.getString("xx");
-                list.add(new ProbaModel(xx1,xx2));
-            }
-        } catch(SQLException e){
-            e.printStackTrace();
+    public List<Pertsona> lortuPertsonak() throws SQLException {
+        List<Pertsona> emaitza = new ArrayList<Pertsona>();
+        String eskaera = "SELECT * FROM datuak";
+        ResultSet rs = dbcontroller.execSQL(eskaera);
+        while (rs.next()){
+            String fn = rs.getString("firstname");
+            String ln = rs.getString("lastname");
+            String sport = rs.getString("sport");
+            int year = rs.getInt("numyears");
+            Boolean veg = rs.getBoolean("vegetarian");
+            String argazkia = rs.getString("argazkia");
+
+            Pertsona p = new Pertsona(fn,ln,sport,year,veg,argazkia);
+            emaitza.add(p);
         }
-        return list;
+        return emaitza;
     }
 
+    public void sartuDBn(List<Pertsona> eskLista) {
+        ezabatu();
+        for (int i = 0; i<eskLista.size();i++){
+            Pertsona p = eskLista.get(i);
+            String firstName = p.getFirstName();
+            String lastName = p.getLastName();
+            String sport = p.getSport();
+            int years = p.getYears();
+            Boolean vegetarian = p.getVegetarian();
+            String argazkia = p.getIrudiPath();
+            String eskaera = "INSERT INTO datuak VALUES('"+firstName+"','"+lastName+"','"+sport+"',"+years+","+vegetarian+",'"+argazkia+"')";
+            dbcontroller.execSQL(eskaera);
+        }
+
+    }
+
+    private void ezabatu() {
+        String eskaera = "DELETE FROM datuak ";
+        dbcontroller.execSQL(eskaera);
+    }
 }
